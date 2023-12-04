@@ -1,1 +1,66 @@
-test2
+SBD
+1 wyswietl nazwa przedmiotu ocena data
+2 wyswietl wszystkie oceny i daty z jezyka polskiego
+3 wyswietl wszystkei oceny i daty dla matematyki, jezyka angielskiego i fizyki
+4 wyswietl oceny i daty z informatyki z 2009 roku
+5 dane z tabeli uczniowie i oceny dla uczniow z id od 50 do 65
+
+1 SELECT oceny.Ocena, oceny.Data, przedmioty.NazwaPrzedmiotu FROM `oceny` INNER join przedmioty on oceny.IDprzedmiotu =przedmioty.IDprzedmiotu WHERE 1;
+
+2 SELECT oceny.Ocena, oceny.Data, przedmioty.NazwaPrzedmiotu FROM `oceny` INNER join przedmioty on oceny.IDprzedmiotu =przedmioty.IDprzedmiotu WHERE przedmioty.NazwaPrzedmiotu = "polski";
+
+3 SELECT oceny.Ocena, oceny.Data FROM `oceny` INNER join przedmioty on oceny.IDprzedmiotu =przedmioty.IDprzedmiotu WHERE przedmioty.NazwaPrzedmiotu = "fizyka" or przedmioty.NazwaPrzedmiotu = "angielski"or przedmioty.NazwaPrzedmiotu = "matematyka";
+
+
+4 SELECT oceny.Ocena, oceny.Data, przedmioty.NazwaPrzedmiotu FROM `oceny` INNER join przedmioty on oceny.IDprzedmiotu = przedmioty.IDprzedmiotu WHERE przedmioty.NazwaPrzedmiotu = "informatyka" and oceny.Data BETWEEN "2009" and "2009-12-31";
+
+5 SELECT //uczniowie.IDucznia, uczniowie.nazwisko, uczniowie.imie, uczniowie.ulica, uczniowie.dom, uczniowie.IDklasy, oceny.Ocena// FROM `uczniowie`INNER join oceny on oceny.IDucznia = uczniowie.IDucznia WHERE uczniowie.IDucznia BETWEEN 50 and 65;
+
+
+
+
+Z 3 tabela 
+
+1. SELECT uczniowie.nazwisko, uczniowie.imie, uczniowie.IDklasy, oceny.Ocena, oceny.Data, przedmioty.NazwaPrzedmiotu, przedmioty.Nazwisko_naucz FROM uczniowie INNER join oceny on uczniowie.IDucznia=oceny.IDucznia INNER join przedmioty on oceny.IDprzedmiotu=przedmioty.IDprzedmiotu;
+
+2. SELECT oceny.Ocena, oceny.Data, przedmioty.NazwaPrzedmiotu, uczniowie.nazwisko, uczniowie.imie, uczniowie.IDklasy, FROM `oceny` INNER join przedmioty on oceny.IDprzedmiotu =przedmioty.IDprzedmiotu INNER join uczniowie on oceny.IDucznia =uczniowie.IDucznia WHERE przedmioty.NazwaPrzedmiotu = "polski";
+
+3. SELECT oceny.Ocena, oceny.Data, przedmioty.NazwaPrzedmiotu, uczniowie.nazwisko, uczniowie.imie, uczniowie.ulica, uczniowie.dom, uczniowie.IDklasy FROM `oceny` INNER join przedmioty on oceny.IDprzedmiotu =przedmioty.IDprzedmiotu INNER join uczniowie on oceny.IDucznia =uczniowie.IDucznia WHERE przedmioty.NazwaPrzedmiotu = "fizyka" or przedmioty.NazwaPrzedmiotu = "angielski"or przedmioty.NazwaPrzedmiotu = "matematyka";
+
+4. SELECT oceny.Ocena, oceny.Data, przedmioty.NazwaPrzedmiotu, uczniowie.nazwisko, uczniowie.imie, uczniowie.IDklasy FROM `oceny` INNER join przedmioty on oceny.IDprzedmiotu = przedmioty.IDprzedmiotu INNER join uczniowie on oceny.IDucznia = uczniowie.IDucznia WHERE przedmioty.NazwaPrzedmiotu = "informatyka" and oceny.Data BETWEEN "2009" and "2009-12-31";
+
+5. SELECT uczniowie.IDucznia, uczniowie.nazwisko, uczniowie.imie, uczniowie.ulica, uczniowie.dom, uczniowie.IDklasy, oceny.Ocena, przedmioty.NazwaPrzedmiotu FROM `uczniowie`INNER join oceny on oceny.IDucznia = uczniowie.IDucznia INNER join przedmioty on oceny.IDprzedmiotu=przedmioty.IDprzedmiotu WHERE uczniowie.IDucznia BETWEEN 50 and 65;
+
+1 imie nazwisko ucznia srednia ocen, dla ucznia ktory ma srednia wieksza niz 3
+2 ---------------------II--------------------------------------- pomiedzy 2 a 3
+3 ---------------------II-----------dla 10 uczniow z najlepsza i najgorsza srednia
+
+
+1. SELECT AVG(oceny.Ocena), uczniowie.nazwisko, uczniowie.imie FROM oceny inner join uczniowie on oceny.IDucznia = uczniowie.IDucznia GROUP by oceny.IDucznia HAVING AVG(oceny.Ocena)>3 ORDER by uczniowie.nazwisko ASC;
+
+2.SELECT AVG(oceny.Ocena), uczniowie.nazwisko, uczniowie.imie FROM oceny inner join uczniowie on oceny.IDucznia = uczniowie.IDucznia GROUP by oceny.IDucznia HAVING AVG(oceny.Ocena)>3 ORDER by uczniowie.nazwisko ASC;
+
+3.SELECT AVG(oceny.Ocena), uczniowie.nazwisko, uczniowie.imie FROM oceny inner join uczniowie on oceny.IDucznia = uczniowie.IDucznia GROUP by oceny.IDucznia ORDER by AVG(oceny.Ocena) ASC limit 10;
+  SELECT AVG(oceny.Ocena), uczniowie.nazwisko, uczniowie.imie FROM oceny inner join uczniowie on oceny.IDucznia = uczniowie.IDucznia GROUP by oceny.IDucznia ORDER by AVG(oceny.Ocena) desc limit 10;
+
+
+Tabela zgodna z pierwsza postacia normalna (1Nf) posiada wszystkie atrybuty (nazwy pól) są niepodzielne, atomowe.
+
+
+1. dodac kolumne miejscowosc alter table uczniowie add miejcowosc varcahr(50)
+	alter table `uczniowie` add miejcowosc varchar(50);
+2. zmodyfikowac wiersze od 1 - 10 miejscowosc jastrzebie zdroj
+	UPDATE uczniowie SET miejcowosc = "Jastrzebie-Zdrój" WHERE IDucznia between 1 and 10;
+3. usunac kolumne miejscowosc drop column miejcowosc
+	alter TABLE uczniowie drop COLUMN miejcowosc;
+4. ponownie dodac kolumne miejscowosc oraz kolumne kod pocztowy
+	alter table `uczniowie` add miejcowosc varchar(50),add Kod_pocztowy varchar(6); 
+5. update dla wszystkieh rekordow kod 44-330
+	UPDATE uczniowie SET Kod_pocztowy = "44-330", miejcowosc = "Jastrzebie-Zdrój";
+6. wyswietlic dane z tabeli uczniowe w dwoch kolumnach
+	SELECT concat(imie, " ", nazwisko) as "Imię i Nazwisko", concat(miejcowosc, ", ", ulica , ": ", dom) as "Adres" FROM `uczniowie`;
+
+1. oblicz obszar łączny obszar krajów azji
+SELECT sum(country.SurfaceArea) from country where country.Continent = "Asia";
+2. oblicz srednia dlugosc zycia w europie
+SELECT avg(country.LifeExpectancy) from country where country.Continent = "Europe";
